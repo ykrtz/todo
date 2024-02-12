@@ -41,7 +41,7 @@ export default function Example() {
         className="w-full h-64 mx-auto"
       />
 
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-2 lg:grid-cols-3 ml-8">
         <div className="col-span-1">
           <input
             type="text"
@@ -49,7 +49,7 @@ export default function Example() {
             onChange={(e) => setUrgentTitle(e.target.value)}
             className="text-xl font-bold text-gray-800 bg-gray-100 mt-4 mb-4 text-center"
           />
-          <div className="flex flex-col sm:gap-2">
+          <div className="flex flex-col sm:gap-2 mr-5 ml-5">
             {projectsRowOne.map((project) => (
               <ProjectItem key={project.name} project={project} />
             ))}
@@ -63,13 +63,11 @@ export default function Example() {
             onChange={(e) => setImportantTitle(e.target.value)}
             className="text-xl font-bold text-gray-800 bg-gray-100 mt-4 mb-4 text-center"
           />
-          <div className="flex flex-col sm:gap-2">
-            <div className="flex flex-col sm:gap-2">
+          <div className="flex flex-col sm:gap-2 mr-5 ml-5">
               {projectsRowTwo.map((project) => (
                 <ProjectItem key={project.name} project={project} />
               ))}
             </div>
-          </div>
         </div>
 
         <div className="col-span-1">
@@ -79,12 +77,10 @@ export default function Example() {
             onChange={(e) => setOtherTitle(e.target.value)}
             className="text-xl font-bold text-gray-800 bg-gray-100 mt-4 mb-4 text-center"
           />
-          <div className="flex flex-col sm:gap-2">
-            <div className="flex flex-col sm:gap-2">
+          <div className="flex flex-col sm:gap-2 mr-5 ml-5">
               {projectsRowThree.map((project) => (
                 <ProjectItem key={project.name} project={project} />
               ))}
-            </div>
           </div>
         </div>
       </div>
@@ -122,11 +118,10 @@ function ProjectItem({ project }: { project: any }) {
         {project.initials}
       </div>
       <div className="flex flex-1 items-center justify-between truncate rounded-r-md border-b border-r border-t border-gray-200 bg-white">
-        <div className="flex-1 truncate px-4 py-2 text-sm">
+        <div className="flex-1 truncate px-4 py-2 text-sm mt-1 mb-1 ml-2">
           <a href={project.href} className="font-medium text-gray-900 hover:text-gray-600">
             {project.name}
           </a>
-          <p className="text-gray-500">{project.members} Members</p>
         </div>
         <div className="flex-shrink-0 pr-2">
           <button
