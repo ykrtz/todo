@@ -1,3 +1,5 @@
+'use client' // 👈 use it here
+import { useState } from 'react';
 import { EllipsisVerticalIcon } from '@heroicons/react/20/solid';
 
 // Define separate arrays for each row of projects
@@ -27,6 +29,10 @@ function classNames(...classes: string[]) {
 }
 
 export default function Example() {
+  const [urgentTitle, setUrgentTitle] = useState('Urgent');
+  const [importantTitle, setImportantTitle] = useState('Important');
+  const [otherTitle, setOtherTitle] = useState('Other');
+
   return (
     <div className="overflow-hidden">
       <img
@@ -34,30 +40,72 @@ export default function Example() {
         alt="Header"
         className="w-full h-64 mx-auto"
       />
-  
-      <h2 className="text-sm font-medium text-gray-500">Pinned Projects</h2>
+
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-2 lg:grid-cols-3">
-        {/* Render projects for row one */}
-        <div className="flex flex-col sm:gap-2">
-          {projectsRowOne.map((project) => (
-            <ProjectItem key={project.name} project={project} />
-          ))}
-        </div>
-        
-        <div className="flex flex-col sm:gap-2">
-          {projectsRowTwo.map((project) => (
-            <ProjectItem key={project.name} project={project} />
-          ))}
-        </div>
-        <div className="flex flex-col sm:gap-2">
-          {projectsRowThree.map((project) => (
-            <ProjectItem key={project.name} project={project} />
-          ))}
+        <div className="col-span-1">
+          <input
+            type="text"
+            value={urgentTitle}
+            onChange={(e) => setUrgentTitle(e.target.value)}
+            className="text-xl font-bold text-gray-800 bg-gray-100 mt-4 mb-4 text-center"
+          />
+          <div className="flex flex-col sm:gap-2">
+            {projectsRowOne.map((project) => (
+              <ProjectItem key={project.name} project={project} />
+            ))}
+          </div>
         </div>
 
-           
+        <div className="col-span-1">
+          <input
+            type="text"
+            value={importantTitle}
+            onChange={(e) => setImportantTitle(e.target.value)}
+            className="text-xl font-bold text-gray-800 bg-gray-100 mt-4 mb-4 text-center"
+          />
+          <div className="flex flex-col sm:gap-2">
+            <div className="flex flex-col sm:gap-2">
+              {projectsRowTwo.map((project) => (
+                <ProjectItem key={project.name} project={project} />
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="col-span-1">
+          <input
+            type="text"
+            value={otherTitle}
+            onChange={(e) => setOtherTitle(e.target.value)}
+            className="text-xl font-bold text-gray-800 bg-gray-100 mt-4 mb-4 text-center"
+          />
+          <div className="flex flex-col sm:gap-2">
+            <div className="flex flex-col sm:gap-2">
+              {projectsRowThree.map((project) => (
+                <ProjectItem key={project.name} project={project} />
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
+      <div className="flex justify-center mt-5 mb-5">
+  <button
+    type="button"
+    className="rounded-md bg-green-600 px-4 py-2.5 mr-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+  >
+    Save
+  </button>
+  <div className="block w-96 rounded-md border py-1.5 pl-2 pr-8 text-gray-900 bg-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+  https://todo-snowy-tau.vercel.app/546gdfgd4f
+</div>
+
+</div>
+
+
+
+
     </div>
+    
   );
 }
 
