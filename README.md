@@ -1,4 +1,4 @@
-Next.js with MongoDB and API Integration on Vercel
+ToDo App in Next.js with MongoDB 
 =====================================================
 
 Dieses Projekt ist Bestandteil des Kurses Internet-Technologien (KIB-INET/PIB-INET) im 5. Semester der HTW Saar.
