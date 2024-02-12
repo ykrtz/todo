@@ -6,6 +6,14 @@ Ziel dieses Gruppenprojektes ist die Entwicklung einer ToDo App basierend auf Ne
 Die Hauptfunktionalitäten sind das Erstellen und Speichern von ToDo Listen. 
 Beim Speichern wird ein zufälliger Link generiert, welcher die ToDo Liste jederzeit aufrufbar macht.
 
+Developing the App
+----------------
+- Make sure that you have installed node.js and npm
+1. Run "npm install" in the todo folder
+2. Run "npm run build" 
+3. Run "npm run start" 
+4. Open your browser and go to page "http://localhost:3000"
+   
 Testing Your API
 ----------------
 *   **API Endpoint:** `https://todo-snowy-tau.vercel.app/api/data`
