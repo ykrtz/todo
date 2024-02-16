@@ -1,15 +1,11 @@
-// pages/api/data.js
 import Cors from 'cors';
 import { connectToDatabase } from '../../mongoclient';
 
-// Initializing the cors middleware
 const cors = Cors({
-  methods: ['POST', 'HEAD'], // Adjust the methods as per your requirements
-  origin: true, // Reflect the request origin, or set to true to allow any origin
+  methods: ['POST', 'HEAD'],
+  origin: true,
 });
 
-// Helper method to wait for a middleware to execute before continuing
-// And to throw an error when an error happens in a middleware
 function runMiddleware(req, res, fn) {
   return new Promise((resolve, reject) => {
     fn(req, res, (result) => {
@@ -22,20 +18,18 @@ function runMiddleware(req, res, fn) {
 }
 
 export default async function handler(req, res) {
-  // Run the middleware
   await runMiddleware(req, res, cors);
 
-  // Rest of the API logic
   if (req.method !== 'POST') {
     return res.status(405).json({ message: 'Method not allowed' });
   }
 
   try {
     const db = await connectToDatabase();
-    const collection = db.collection('Dexscreener');
-    const data = req.body;
+    const collection = db.collection('Data'); // Ensure this is your correct collection name
+    const data = req.body; // This includes the unique project name and rows
     await collection.insertOne(data);
-    res.status(200).json({ message: 'Data saved successfully' });
+    res.status(200).json({ message: 'Data saved successfully', projectName: data.projectName });
   } catch (error) {
     res.status(500).json({ message: 'Internal Server Error' });
   }
