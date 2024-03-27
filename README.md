@@ -19,3 +19,9 @@ Testing Your API
 *   **API Endpoint:** `https://todo-snowy-tau.vercel.app/api/data`
  To test, send a simple POST request with a JSON body to the API endpoint.
 Quick Start Guide
+
+   
+Using your own DB
+----------------
+Set the env variable MONGODB_URI to your MongoDB Connection String
+or set the Connection String in mongoclient.js
