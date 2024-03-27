@@ -3,26 +3,12 @@
 import { useState, useEffect } from 'react';
 import { EllipsisVerticalIcon } from '@heroicons/react/20/solid';
 
-const projectsRowOne = [
-  { id: 1, name: 'Task 1', initials: '', bgColor: 'bg-green-500' },
-  { id: 2, name: 'Task 2', initials: '', bgColor: 'bg-green-500' },
-  { id: 3, name: 'Task 3', initials: '', bgColor: 'bg-green-500' },
-  { id: 4, name: 'Task 4', initials: '+', href: '#', members: 12, bgColor: 'bg-green-500' },
-];
-
-const projectsRowTwo = [
-  { id: 5, name: 'Task 1', initials: '', bgColor: 'bg-orange-500' },
-  { id: 6, name: 'Task 2', initials: '', bgColor: 'bg-orange-500' },
-  { id: 7, name: 'Task 3', initials: '', bgColor: 'bg-orange-500' },
-  { id: 8, name: 'Task 4', initials: '+', href: '#', members: 12, bgColor: 'bg-orange-500' },
-];
-
-const projectsRowThree = [
-  { id: 9, name: 'Task 1', initials: '', bgColor: 'bg-red-500' },
-  { id: 10, name: 'Task 2', initials: '', bgColor: 'bg-red-500' },
-  { id: 11, name: 'Task 3', initials: '', bgColor: 'bg-red-500' },
-  { id: 12, name: 'Task 4', initials: '+', href: '#', members: 12, bgColor: 'bg-red-500' },
-];
+interface ProjectItem {
+  id: number;
+  name: string;
+  initials?: string;
+  bgColor: string;
+}
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ');
@@ -35,10 +21,90 @@ export default function Example() {
   const [otherTitle, setOtherTitle] = useState('Other');
   const [uniqueProjectName, setUniqueProjectName] = useState('');
 
+  const [projectsRowOne, setProjectsRowOne] = useState<ProjectItem[]>([]);
+  const [projectsRowTwo, setProjectsRowTwo] = useState<ProjectItem[]>([]);
+  const [projectsRowThree, setProjectsRowThree] = useState<ProjectItem[]>([]);
+  
+  async function fetchProject(URLidentifier: string) {
+    try {
+      const response = await fetch(`/api/data?projectName=${URLidentifier}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+      if (!response.ok) throw new Error('Network response was not ok');
+      const projectData = await response.json();
+      setProjectsRowOne(projectData.urgent || []);
+        setProjectsRowTwo(projectData.important || []);
+        setProjectsRowThree(projectData.other || []);
+      console.log('Fetched project data:', projectData);
+  
+    } catch (error) {
+      console.error('Error fetching project data:', error);
+    }
+  }
+
+
+  async function saveProjects() {
+    const projectData = {
+      projectName: uniqueProjectName,
+      urgent: projectsRowOne,
+      important: projectsRowTwo,
+      other: projectsRowThree,
+    };
+
+    try {
+      const response = await fetch('/api/data', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(projectData),
+      });
+
+      if (response.ok) {
+        alert('Projects saved successfully!' + projectData.projectName);
+      } else {
+        alert('Failed to save projects.');
+      }
+    } catch (error) {
+      console.error('Error saving projects:', error);
+      alert('An error occurred while saving projects.');
+    }
+  }
   useEffect(() => {
-    // Generate a unique name and set it
-    const name = `${Math.random().toString(36).substr(2, 9)}`;
-    setUniqueProjectName(name);
+
+    const URLidentifier = window.location.href.split('/').pop()?.toString();
+    if (URLidentifier && !URLidentifier.includes(".")) { // Check if it seems like a project identifier
+      fetchProject(URLidentifier);
+      setUniqueProjectName(URLidentifier)
+    }
+    else {
+      // Generate a unique name and set it
+      const name = `${Math.random().toString(36).substr(2, 9)}`;
+      setUniqueProjectName(name);
+      window.history.pushState({ path: window.location.href+name }, '', window.location.href+name);
+      setProjectsRowOne([
+        { id: 1, name: 'Task 1', initials: '', bgColor: 'bg-green-500' },
+        { id: 2, name: 'Task 2', initials: '', bgColor: 'bg-green-500' },
+        { id: 3, name: 'Task 3', initials: '', bgColor: 'bg-green-500' },
+        { id: 4, name: 'Task 4', initials: '+', bgColor: 'bg-green-500' },
+      ]);
+      setProjectsRowTwo([
+        { id: 5, name: 'Task 1', initials: '', bgColor: 'bg-orange-500' },
+        { id: 6, name: 'Task 2', initials: '', bgColor: 'bg-orange-500' },
+        { id: 7, name: 'Task 3', initials: '', bgColor: 'bg-orange-500' },
+        { id: 8, name: 'Task 4', initials: '+', bgColor: 'bg-orange-500' },
+      ]);
+      setProjectsRowThree([
+        { id: 9, name: 'Task 1', initials: '', bgColor: 'bg-red-500' },
+        { id: 10, name: 'Task 2', initials: '', bgColor: 'bg-red-500' },
+        { id: 11, name: 'Task 3', initials: '', bgColor: 'bg-red-500' },
+        { id: 12, name: 'Task 4', initials: '+', bgColor: 'bg-red-500' },
+      ]);
+    
+    }
   }, []);
   return (
     <div className="overflow-hidden">
@@ -116,33 +182,7 @@ function ProjectItem({ project }: { project: any }) {
       </div>
     </div>
   );
+
 }
 
-async function saveProjects() {
-  const uniqueProjectName = `${Math.random().toString(36).substr(2, 9)}`; // Generating a unique name
-  const projectData = {
-    projectName: uniqueProjectName,
-    urgent: projectsRowOne,
-    important: projectsRowTwo,
-    other: projectsRowThree,
-  };
 
-  try {
-    const response = await fetch('/api/data', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(projectData),
-    });
-
-    if (response.ok) {
-      alert('Projects saved successfully!'+projectData.projectName);
-    } else {
-      alert('Failed to save projects.');
-    }
-  } catch (error) {
-    console.error('Error saving projects:', error);
-    alert('An error occurred while saving projects.');
-  }
-}
