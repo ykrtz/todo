@@ -20,17 +20,30 @@ function runMiddleware(req, res, fn) {
 export default async function handler(req, res) {
   await runMiddleware(req, res, cors);
 
-  if (req.method !== 'POST') {
-    return res.status(405).json({ message: 'Method not allowed' });
-  }
+  const db = await connectToDatabase();
+  const collection = db.collection('Data'); // Use your actual collection name
 
-  try {
-    const db = await connectToDatabase();
-    const collection = db.collection('Data'); // Ensure this is your correct collection name
-    const data = req.body; // This includes the unique project name and rows
-    await collection.insertOne(data);
-    res.status(200).json({ message: 'Data saved successfully', projectName: data.projectName });
-  } catch (error) {
-    res.status(500).json({ message: 'Internal Server Error' });
+  if (req.method === 'POST') {
+    try {
+      const data = req.body;
+      await collection.insertOne(data);
+      res.status(200).json({ message: 'Data saved successfully', projectName: data.projectName });
+    } catch (error) {
+      res.status(500).json({ message: 'Internal Server Error' });
+    }
+  } else if (req.method === 'GET') {
+    try {
+      const { projectName } = req.query; // Get projectName from the query string
+      const data = await collection.findOne({ projectName: projectName });
+      if (data) {
+        res.status(200).json(data);
+      } else {
+        res.status(404).json({ message: 'Data not found' });
+      }
+    } catch (error) {
+      res.status(500).json({ message: 'Internal Server Error' });
+    }
+  } else {
+    res.status(405).json({ message: 'Method not allowed' });
   }
 }
