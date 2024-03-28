@@ -26,9 +26,20 @@ export default async function handler(req, res) {
   if (req.method === 'POST') {
     try {
       const data = req.body;
-      await collection.insertOne(data);
-      res.status(200).json({ message: 'Data saved successfully', projectName: data.projectName });
+      // Use updateOne with upsert: true to update or insert if not exists
+      const updateResult = await collection.updateOne(
+        { projectName: data.projectName }, // Filter document by projectName
+        { $set: data }, // Update the existing document or set a new one
+        { upsert: true } // Create a new document if one doesn't exist
+      );
+      
+      if (updateResult.upsertedCount > 0) {
+        res.status(201).json({ message: 'Data inserted successfully', projectName: data.projectName });
+      } else {
+        res.status(200).json({ message: 'Data updated successfully', projectName: data.projectName });
+      }
     } catch (error) {
+      console.error(error);
       res.status(500).json({ message: 'Internal Server Error' });
     }
   } else if (req.method === 'GET') {
@@ -41,6 +52,7 @@ export default async function handler(req, res) {
         res.status(404).json({ message: 'Data not found' });
       }
     } catch (error) {
+      console.error(error);
       res.status(500).json({ message: 'Internal Server Error' });
     }
   } else {
