@@ -121,9 +121,8 @@ export default function Example() {
     </div>
   );
 }
-function ProjectItem({ project, onUpdateProject, onAddProject }: { project: ProjectItem; onUpdateProject: (project: ProjectItem) => void; onAddProject: (id: number) => void }) {
+function ProjectItem({ project, onUpdateProject, onAddProject, onDeleteProject }: { project: ProjectItem; onUpdateProject: (project: ProjectItem) => void; onAddProject: (id: number) => void; onDeleteProject: (id: number) => void }) {
   const [name, setName] = useState(project.name);
-
   const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
   };
@@ -140,19 +139,28 @@ function ProjectItem({ project, onUpdateProject, onAddProject }: { project: Proj
     }
   }
 
+  const handleClickDelete = () => {
+    onDeleteProject(project.id);
+  };
+
   return (
     <div className="flex rounded-md shadow-sm">
       <div className={classNames(project.bgColor, 'flex w-16 flex-shrink-0 items-center justify-center rounded-l-md text-sm font-medium text-white')}>
-        {project.initials === '+' && (
-          <button onClick={handleClickAdd} className="...">
-            +
-          </button>
-        )}      </div>
-      <div className="flex flex-1 items-center justify-between truncate rounded-r-md border-b border-r border-t border-gray-200 bg-white">
-        <input type="text" value={name} onChange={handleNameChange} onBlur={handleBlur} className="flex-1 truncate px-4 py-2 text-sm mt-1 mb-1 ml-2 border-none rounded-md focus:ring-2 focus:ring-indigo-500" autoFocus />
+        <button onClick={handleClickAdd}>
+          +
+        </button>
+      </div>
+      <div className="flex flex-1 items-center justify-between truncate rounded-none border-b border-r border-t border-gray-200 bg-white">
+        <input type="text" value={name} onChange={handleNameChange} onBlur={handleBlur} className="flex-1 truncate px-4 py-2 text-sm border-none focus:ring-2 focus:ring-indigo-500" autoFocus />
+      </div>
+      <div className={classNames(project.bgColor, 'flex w-16 flex-shrink-0 items-center justify-center rounded-r-md text-sm font-medium text-white')}>
+        <button onClick={handleClickDelete}>
+          -
+        </button>
       </div>
     </div>
   );
+
 }
 function ProjectRow({ title, setTitle, projects, setProjects, bgColor }: { title: string; setTitle: React.Dispatch<React.SetStateAction<string>>; projects: ProjectItem[]; setProjects: React.Dispatch<React.SetStateAction<ProjectItem[]>>; bgColor: string }) {
 
@@ -175,14 +183,17 @@ function ProjectRow({ title, setTitle, projects, setProjects, bgColor }: { title
 
     setProjects(updatedProjects);
   };
+  const deleteProject = (projectId: number) => {
+    setProjects(projects.filter(project => project.id !== projectId));
+  };
 
   return (
     <div className="col-span-1">
       <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} className="text-xl font-bold text-gray-800 bg-gray-100 mt-4 mb-4 text-center" />
       <div className="flex flex-col sm:gap-2 mr-5 ml-5">
         {projects.map((project) => (
-          <ProjectItem key={project.id} project={project} onUpdateProject={(updatedProject) => setProjects(prevProjects => prevProjects.map(proj => proj.id === updatedProject.id ? updatedProject : proj))} onAddProject={() => addProject(project.id)} />
-        ))}
+          <ProjectItem key={project.id} project={project} onUpdateProject={(updatedProject) => setProjects(prevProjects => prevProjects.map(proj => proj.id === updatedProject.id ? updatedProject : proj))} onAddProject={() => addProject(project.id)} onDeleteProject={deleteProject} />
+          ))}
       </div>
     </div>
   );
