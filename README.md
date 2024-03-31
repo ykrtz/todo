@@ -9,7 +9,7 @@ ToDo App in Next.js with MongoDB
 Dieses Projekt ist Bestandteil des Kurses Internet-Technologien (KIB-INET/PIB-INET) im 5. Semester der HTW Saar.
 Ziel dieses Gruppenprojektes ist die Entwicklung einer ToDo App basierend auf Next.js mit MongoDB Integration.
 Die Hauptfunktionalitäten sind das Erstellen und Speichern von ToDo Listen. 
-Beim Speichern wird ein zufälliger Link generiert, welcher die ToDo Liste jederzeit aufrufbar macht.
+Beim Speichern wird ein zufälliger Link generiert, welcher die ToDo Liste jederzeit aufrufbar ermöglicht.
 
 Using the App
 ----------------
