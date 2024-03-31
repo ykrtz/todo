@@ -110,7 +110,7 @@ export default function Example() {
   function copyToClipboard() {
     navigator.clipboard.writeText(`https://todo-snowy-tau.vercel.app/${uniqueProjectName}`);
     showNotification('URL copied to clipboard!');
-    }
+  }
 
   return (
     <div className="overflow-hidden">
@@ -118,7 +118,7 @@ export default function Example() {
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-2 lg:grid-cols-3 ml-8">
         <ProjectRow title={urgentTitle} projects={projectsRowOne} setProjects={(updatedProjects) => setProjectsRowOne(updatedProjects)} bgColor="bg-green-500" />
         <ProjectRow title={importantTitle} projects={projectsRowTwo} setProjects={(updatedProjects) => setProjectsRowTwo(updatedProjects)} bgColor="bg-orange-500" />
-        <ProjectRow title={otherTitle}  projects={projectsRowThree} setProjects={(updatedProjects) => setProjectsRowThree(updatedProjects)} bgColor="bg-red-500" />
+        <ProjectRow title={otherTitle} projects={projectsRowThree} setProjects={(updatedProjects) => setProjectsRowThree(updatedProjects)} bgColor="bg-red-500" />
       </div>
       <div className="flex justify-center mt-5 mb-5">
         <button type="button" onClick={saveProjects} className="rounded-md bg-green-600 px-4 py-2.5 mr-2 text-sm font-semibold text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
@@ -127,9 +127,13 @@ export default function Example() {
         <div className="mx-2 block w-96 rounded-md border py-1.5 pl-2 pr-8 text-gray-900 bg-white shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 font-bold focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
           https://todo-snowy-tau.vercel.app/{uniqueProjectName}
         </div>
-          <button type="button" onClick={copyToClipboard} className="rounded-md bg-yellow-500 px-4 py-2.5 mr-2 text-sm font-semibold text-white shadow-sm hover:bg-yellow-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+        <button type="button" onClick={copyToClipboard} className="rounded-md bg-yellow-500 px-4 py-2.5 mr-2 text-sm font-semibold text-white shadow-sm hover:bg-yellow-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
           Copy
         </button>
+      </div>
+      <div className="text-center mt-5">
+        <p className="text-sm text-gray-600">Save: Saves your todo app in the database. You can reuse your todo app with the URL.</p>
+        <p className="text-sm text-gray-600">Copy: Copies the URL to clipboard. Save it on your local device to reaccess your todo app or create a bookmark.</p>
       </div>
       <div className="fixed bottom-0 right-0 m-4">
         {notification.show && (
@@ -165,7 +169,7 @@ function ProjectItem({ project, onUpdateProject, onAddProject, onDeleteProject }
 
   return (
     <div className="flex rounded-md shadow-sm">
-      <div className={classNames(project.bgColor , 'flex w-16 flex-shrink-0 items-center justify-center rounded-l-md text-sm font-medium text-white')} onClick={handleClickAdd}>
+      <div className={classNames(project.bgColor, 'flex w-16 flex-shrink-0 items-center justify-center rounded-l-md text-sm font-medium text-white')} onClick={handleClickAdd}>
         <button >
           +
         </button>
@@ -211,9 +215,15 @@ function ProjectRow({ title, projects, setProjects, bgColor }: { title: string; 
     <div className="col-span-1">
       <div className="text-xl font-bold text-gray-800 bg-gray-100 mt-4 mb-4 text-center">{title}</div>
       <div className="flex flex-col font-bold sm:gap-2 mr-5 ml-5">
-        {projects.map((project) => (
-          <ProjectItem key={project.id} project={project} onUpdateProject={(updatedProject) => setProjects(prevProjects => prevProjects.map(proj => proj.id === updatedProject.id ? updatedProject : proj))} onAddProject={() => addProject(project.id)} onDeleteProject={deleteProject} />
-          ))}
+        {projects.length > 0 ? (
+          projects.map((project) => (
+            <ProjectItem key={project.id} project={project} onUpdateProject={(updatedProject) => setProjects(prevProjects => prevProjects.map(proj => proj.id === updatedProject.id ? updatedProject : proj))} onAddProject={() => addProject(project.id)} onDeleteProject={deleteProject} />
+          ))
+        ) : (
+          <div className="flex justify-center">
+            <button className={classNames(bgColor, 'rounded-md px-4 py-2 text-white')} onClick={() => addProject(0)}>+</button>
+          </div>
+        )}
       </div>
     </div>
   );
